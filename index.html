@@ -9,7 +9,15 @@
     </head>
 
     <body>
-        
+        <style>
+            table,th,td {
+                border-collapse: collapse;
+                border: 1px solid black;
+                width: 100%;
+                table-layout: fixed;
+
+            }
+        </style>
         <div id="body"></div>
         <script>
             fetch('https://kija56.github.io/test/data.json')
@@ -26,54 +34,45 @@
             function appendData(data) {
                 let items = data.metaData.items;
                 let rows=data.rows;
+                let tz=document.createElement('tr');
+                let tf= document.createElement('td');
                 let dimensions = data.metaData.dimensions;
                 let table = document.createElement('table');
                 let thead = document.createElement('thead');
                 let tbody = document.createElement('tbody');
                 let row_1 = document.createElement('tr');
-                let row_2 = document.createElement('tr');
+
                 table.appendChild(thead);
                 table.appendChild(tbody);
                 thead.appendChild(row_1);
-                tbody.appendChild(row_2);
+                row_1.appendChild(tf);
+                tbody.appendChild(tz);
                 for (const [key, value] of Object.entries(items)) {
                     if (dimensions.pe.includes(key)) {
                         let td = document.createElement('td');
                         td.innerHTML = value.name;
                         row_1.appendChild(td);
+
                     } 
                     else if (dimensions.ou.includes(key)) {
                         let to= document.createElement('tr');
-                        
+                       
                         let td = document.createElement('td');
                         td.innerHTML = value.name;
                         to.appendChild(td);
-                        row_2.appendChild(to);
+                        tbody.appendChild(to);
+                      
+                        for (const [key, value] of Object.entries(rows)) {
+                            if (value[key] == value.ou) {
+                                let td = document.createElement('td');
+                                td.innerHTML = value[3];
+                                to.appendChild(td);
+                            }
+                        }
                     }
-                    else if(dimensions.dx.includes(key)){
-                        let to= document.createElement('tr');
-                        let td = document.createElement('td');
-                        td.innerHTML = value.name;
-                        to.insertCell(-1);
-                        to.appendChild(td);
-                        row_2.appendChild(to);
-                    }
-                    
+                       
                 }
-
-                for (const [key, value] of Object.entries(rows)) {
-                    let tr = document.createElement('tr');
-                   
-                        let td = document.createElement('td');
-                        td.innerHTML = value[3];
-                        tr.appendChild(td);
-                
-                    row_2.appendChild(tr);
-                }
-                
-                
                 document.getElementById('body').appendChild(table);
-
                 
             }
         </script>
