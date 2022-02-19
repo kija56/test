@@ -9,15 +9,11 @@
     </head>
 
     <body>
-        <div id="myData"></div>
+        
+        <div id="body"></div>
         <script>
-            
-           
-            fetch('file:///Users/ipfSoftwares/Desktop/Dev/personal/test/data.json', {
-                    mode: 'no-cors'
-                })
+            fetch('https://kija56.github.io/test/data.json')
                 .then(function (response) {
-                    console.log(response.json());
                     return response.json();
                 })
                 .then(function (data) {
@@ -28,12 +24,57 @@
                 });
 
             function appendData(data) {
-                var mainContainer = document.getElementById("myData");
-                for (var i = 0; i < data.length; i++) {
-                    var div = document.createElement("div");
-                    div.innerHTML = 'Name: ' + data[i].firstName + ' ' + data[i].lastName;
-                    mainContainer.appendChild(div);
+                let items = data.metaData.items;
+                let rows=data.rows;
+                let dimensions = data.metaData.dimensions;
+                let table = document.createElement('table');
+                let thead = document.createElement('thead');
+                let tbody = document.createElement('tbody');
+                let row_1 = document.createElement('tr');
+                let row_2 = document.createElement('tr');
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                thead.appendChild(row_1);
+                tbody.appendChild(row_2);
+                for (const [key, value] of Object.entries(items)) {
+                    if (dimensions.pe.includes(key)) {
+                        let td = document.createElement('td');
+                        td.innerHTML = value.name;
+                        row_1.appendChild(td);
+                    } 
+                    else if (dimensions.ou.includes(key)) {
+                        let to= document.createElement('tr');
+                        
+                        let td = document.createElement('td');
+                        td.innerHTML = value.name;
+                        to.appendChild(td);
+                        row_2.appendChild(to);
+                    }
+                    else if(dimensions.dx.includes(key)){
+                        let to= document.createElement('tr');
+                        let td = document.createElement('td');
+                        td.innerHTML = value.name;
+                        to.insertCell(-1);
+                        to.appendChild(td);
+                        row_2.appendChild(to);
+                    }
+                    
                 }
+
+                for (const [key, value] of Object.entries(rows)) {
+                    let tr = document.createElement('tr');
+                   
+                        let td = document.createElement('td');
+                        td.innerHTML = value[3];
+                        tr.appendChild(td);
+                
+                    row_2.appendChild(tr);
+                }
+                
+                
+                document.getElementById('body').appendChild(table);
+
+                
             }
         </script>
     </body>
